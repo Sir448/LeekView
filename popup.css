@@ -1,0 +1,118 @@
+:root {
+  --ld-slate: #37474f;
+  --ld-blue: #007bff; 
+  --ld-bg-grey: #f8f9fa;
+  --ld-border: #e9ecef;
+  --ld-text-muted: #6c757d;
+}
+
+body {
+  width: 240px;
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+  background-color: var(--ld-bg-grey);
+  color: var(--ld-slate);
+}
+
+.popup-wrapper {
+  padding: 18px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+}
+
+.brand-title {
+  font-family: 'Catamaran', sans-serif; 
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0;
+  color: var(--ld-slate);
+  letter-spacing: -0.5px;
+}
+
+.brand-title span {
+  font-weight: 400;
+  color: var(--ld-text-muted);
+}
+
+/* Settings Card */
+.settings-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px;
+  border: 1px solid var(--ld-border);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ld-slate);
+}
+
+#status {
+  font-size: 11px;
+  color: var(--ld-text-muted);
+  margin: 2px 0 0 0;
+}
+
+
+
+/* The Switch - Using the Blue theme found on their site */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ced4da;
+  transition: .3s;
+  border-radius: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+/* LeekDuck Blue for the Active state */
+input:checked + .slider { background-color: var(--ld-blue); }
+input:checked + .slider:before { transform: translateX(20px); }
