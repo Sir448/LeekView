@@ -370,6 +370,10 @@ async function renderFilterMenu(eventDataArray) {
       return obj;
     }, {});
 
+  [...Object.keys(PARENTS), ...Object.keys(eventDataArray)].forEach((cat) => {
+    filters[`filter:${cat}`] ??= true;
+  });
+
   async function renderCheckboxHTML(cat, level = 0) {
     assignedCategories.add(cat);
     const typeClass = cat.toLowerCase().replace(/\s+/g, "-");
@@ -405,12 +409,11 @@ async function renderFilterMenu(eventDataArray) {
   }
 
   let finalHtml = await buildHierarchyHtml(FILTER_HIERARCHY);
-  for (const cat of Object.keys(eventDataArray)) {
-    if (assignedCategories.has(cat)) {
-      continue;
-    }
 
-    finalHtml += await renderCheckboxHTML(cat);
+  for (const cat of Object.keys(eventDataArray)) {
+    if (!assignedCategories.has(cat)) {
+      finalHtml += await renderCheckboxHTML(cat);
+    }
   }
 
   container.innerHTML = finalHtml;
@@ -433,11 +436,9 @@ async function renderFilterMenu(eventDataArray) {
       const currentLevel = parseInt(e.target.dataset.level);
       const allCheckboxes = Array.from(checkboxes);
 
-      chrome.storage.local.set({
+      const filterData = {
         [`filter:${checkbox.value}`]: isChecked,
-      });
-
-      if (e.detail && e.detail.isPropagated) return;
+      };
 
       for (let i = index + 1; i < allCheckboxes.length; i++) {
         const nextBox = allCheckboxes[i];
@@ -452,11 +453,10 @@ async function renderFilterMenu(eventDataArray) {
 
         nextBox.parentElement.style.opacity = isChecked ? "1" : "0.5";
         nextBox.parentElement.style.pointerEvents = isChecked ? "auto" : "none";
-        nextBox.dispatchEvent(
-          new CustomEvent("change", { detail: { isPropagated: true } }),
-        );
+        filterData[`filter:${nextBox.value}`] = isChecked;
       }
       renderTimeline(eventDataArray);
+      chrome.storage.local.set(filterData);
     });
   });
 }
@@ -611,7 +611,7 @@ chrome.storage.local.get(["enabled"], (result) => {
         </div>
     `;
 
-    renderFilterMenu(eventDataArray);
+    await renderFilterMenu(eventDataArray);
 
     document.getElementById("width-select").addEventListener("change", (e) => {
       hourWidth = Math.round(screen.width / parseInt(e.target.value) / 24);
